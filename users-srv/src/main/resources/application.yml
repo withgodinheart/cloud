@@ -1,0 +1,64 @@
+server:
+  port: ${PORT:0}
+
+spring:
+  application:
+    name: users-srv
+  config:
+    import: optional:configserver:http://localhost:8012
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: guest
+    password: guest
+  devtools:
+    restart:
+      enabled: true
+
+eureka:
+  instance:
+    instance-id: ${spring.application.name}:${spring.application.instance_id:${random.value}}
+  client:
+    service-url:
+      defaultZone: http://localhost:8010/eureka
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: beans,health,info,mappings,httpexchanges
+
+---
+
+spring:
+  datasource:
+    url: jdbc:h2:mem:users-srv
+    driverClassName: org.h2.Driver
+    username: sa
+    password:
+  h2:
+    console:
+      enabled: true
+      path: /h2
+      settings:
+        web-allow-others: true
+  jpa:
+    open-in-view: false
+    show-sql: true
+    database-platform: org.hibernate.dialect.H2Dialect
+    generate-ddl: true
+
+logging:
+  level:
+    root: INFO
+
+gateway:
+  ip: 192.168.1.92
+
+token:
+#  expiration-time: 3600000
+  secret: dz./df2f9*73#2./!r2-as!#.^hcd&*23.[]!dikwm.zoe2@!*&/#lsol/df,qopoi%^e#lf;/.
+
+# not used now
+login:
+  url: "in"

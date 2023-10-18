@@ -1,0 +1,36 @@
+POST http://localhost:8082/users-srv/users
+Content-Type: application/json
+Accept: application/json
+#Accept: application/xml
+
+{
+  "name": "Alex",
+  "email": "alex1@alex.com",
+  "password": "password"
+}
+
+###
+
+POST http://localhost:8082/users-srv/login
+Content-Type: application/json
+Accept: application/json
+
+{
+  "email": "alex1@alex.com",
+  "password": "password"
+}
+
+###
+
+GET http://localhost:8082/users-srv/users/status
+Content-Type: application/json
+Accept: application/json
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxIiwiZXhwIjoxNjg2ODgyNTEwLCJpYXQiOjE2ODY4Nzg5MTB9.C3ZDpzaRTd9oLss-dD72fVut4CrLMYflPb7uo5TRdEQywrsg1_kCPLaIYMouHVA-_OxfcyaiBuQ1mKXSlkrQDw
+
+### Check what props are pulled
+
+GET http://localhost:8012/config-server/native
+Content-Type: application/json
+Accept: application/json
+
+###

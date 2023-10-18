@@ -1,0 +1,31 @@
+server:
+  port: 8012
+
+spring:
+  profiles:
+    active: native,git
+  application:
+    name: config-server
+  cloud:
+    config:
+      server:
+        native:
+          search-locations: classpath:config/
+#          search-locations: file://${user.home}/IdeaProjects/cloud/config-server/src/main/resources/config/
+        git:
+          uri: https://github.com/withgodinheart/config-server
+          username: withgodinheart
+          password: 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
+          clone-on-start: true
+          default-label: main
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: guest
+    password: guest
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: busrefresh

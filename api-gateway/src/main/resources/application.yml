@@ -1,0 +1,83 @@
+server:
+  port: 8082
+
+spring:
+  application:
+    name: api-gateway
+  config:
+    import: optional:configserver:http://localhost:8012
+  cloud:
+    gateway:
+      discovery:
+        locator:
+          enabled: true
+          lower-case-service-id: true
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: guest
+    password: guest
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8010/eureka
+
+management:
+  endpoint:
+    gateway:
+      enabled: true
+  endpoints:
+    web:
+      exposure:
+        include: gateway,health,mappings
+
+token:
+  secret: dz./df2f9*73#2./!r2-as!#.^hcd&*23.[]!dikwm.zoe2@!*&/#lsol/df,qopoi%^e#lf;/.
+
+---
+
+spring:
+  cloud:
+    gateway:
+      routes:
+        - id: users-status-check
+          uri: lb://users-srv
+          predicates:
+            - Path=/users-srv/users/status
+            - Method=GET
+            - Header=Authorization, Bearer (.*)
+          filters:
+            - RemoveRequestHeader=Cookie
+            - AuthorizationHeaderFilter
+            - RewritePath=/users-srv/(?<segment>.*), /$\{segment}
+
+        # not necessary
+#        - id: users-srv-login
+#          uri: lb://users-srv
+#          predicates:
+#            - Path=/users-srv/login
+#            - Method=POST
+#          filters:
+#            - RemoveRequestHeader=Cookie
+#            - RewritePath=/users-srv/(?<segment>.*), /$\{segment}
+
+        - id: users-srv
+          uri: lb://users-srv
+          predicates:
+            - Path=/users-srv/users/**
+            - Method=GET,PUT,DELETE
+            - Header=Authorization, Bearer (.*)
+          filters:
+            - RemoveRequestHeader=Cookie
+            - AuthorizationHeaderFilter
+            - RewritePath=/users-srv/(?<segment>.*), /$\{segment}
+
+        - id: users-srv-actuator
+          uri: lb://users-srv
+          predicates:
+            - Path=/users-srv/actuator/**
+            - Method=GET
+          filters:
+            - RemoveRequestHeader=Cookie
+            - RewritePath=/users-srv/(?<segment>.*), /$\{segment}
